@@ -111,9 +111,9 @@ contract GreetingCard is IERC721Metadata {
         emit Signed(msg.sender);
     }
 
-    function withdraw() {
+    function withdraw() public {
         require(msg.sender == nftOwner);
-        nftOwner.transfer(address(this).balance);
+        payable(nftOwner).transfer(address(this).balance);
     }
 
     /**
