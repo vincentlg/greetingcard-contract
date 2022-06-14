@@ -8,7 +8,7 @@ library GreetingLib {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     string private constant HEADER =
-        '<svg xmlns="http://www.w3.org/2000/svg" height="300" width="300" style="border:15px solid pink" shape-rendering="crispEdges"><svg x="10" y="10" ><g transform="scale(3)">'
+        '<svg xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect width="100%" height="100%" fill="pink"/><svg x="10" y="10" ><g transform="scale(3)">'
         '<path stroke="#3c1432" d="M6 0h7M5 1h1m7 0h9M4 2h1m17 0h1M3 3h1m19 0h1M3 4h1m19 0h1M3 5h1m19 0h1M3 6h1m19 0h1M3 7h1m19 0h1M3 8h1m19 0h1M2 9h1m20 0h1M1 10h1m21 0h1M0 11h1m22 0h1M0 12h1m22 0h1M0 13h1m22 0h1M0 14h1m21 0h1M1 15h1m18 0h2M2 16h2m15 0h1M4 17h6m7 0h2m-9 1h7"/>'
         '<path stroke="#8e3076" d="M6 1h2M6 2h1m6 0h1M4 3h1m10 0h1m6 0h1M12 4h1m1 0h1m7 0h1M8 5h1m1 0h1m1 0h1m9 0h1M10 6h2m5 0h1m2 0h1m1 0h1M4 7h1m6 0h1m8 0h1M4 8h1m2 0h1m1 1h1m2 0h1m2 0h1m2 0h1m-5 1h1m7 0h1m-3 1h3m-4 1h4m-5 1h4M7 14h1m8 0h5M2 15h1m4 0h1m8 0h4M4 16h4m8 0h2m-7 1h2m3 0h1"/>'
         '<path stroke="#aa388c" d="M8 1h1m1 0h2M5 2h1m6 0h1m2 0h1m1 0h3M5 3h1m8 0h1M4 4h1m1 0h1m4 0h1m1 0h1M4 5h1m1 0h1m2 0h1m1 0h1m1 0h1M4 6h1m8 0h1m1 0h1m-1 1h1m2 0h1m-4 1h1m2 0h1M9 10h1m1 0h3m-6 1h2m8 0h1M8 12h1m8 0h1M1 13h2m4 0h1m8 0h1M1 14h6m1 0h2m-7 1h4m1 0h8m-7 1h7m-3 1h3"/>'

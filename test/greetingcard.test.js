@@ -30,6 +30,8 @@ describe('GreetingCard', () => {
     expect(await greetingCard.balanceOf(owner.address)).to.equal(0);
     expect(await greetingCard.balanceOf(receiver.address)).to.equal(1);
 
+    console.log(await greetingCard.tokenURI(1));
+
     await greetingCard.connect(receiver).withdraw();
   });
 });
