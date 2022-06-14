@@ -1,104 +1,106 @@
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
-import "./base64.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import "@openzeppelin/contracts/utils/introspection/IERC165.sol";
+import "./GreetingLib.sol";
 
-contract GreetingCard is ERC721 {
-    uint256 private _currentTokenId = 0;
+contract GreetingCard is IERC721Metadata {
+  using EnumerableSet for EnumerableSet.AddressSet;
 
-    address[] private _signers;
+  address private nftOwner;
 
-    event SignatureReceived(address from);
+  EnumerableSet.AddressSet private signers;
 
-    constructor(string memory _name, string memory _symbol)
-        ERC721(_name, _symbol)
-    {}
+  event Signed(address from);
 
-    function sign(uint256 tokenId) public {
-        _signers.push(msg.sender); //todo sign for tokenId
-        emit SignatureReceived(msg.sender);
-    }
+  constructor(address to) {
+    nftOwner = to;
+    emit Transfer(address(0), to, 1);
+  }
 
-    /**
-     * @dev Mints a token to an address with a tokenURI.
-     * @param _to address of the future owner of the token
-     */
-    function mintTo(address _to) public {
-        uint256 newTokenId = _getNextTokenId();
-        _mint(_to, newTokenId);
-        _incrementTokenId();
-    }
+  function supportsInterface(bytes4 interfaceId) public view override returns (bool) {
+    return interfaceId == type(IERC721).interfaceId
+      || interfaceId == type(IERC721Metadata).interfaceId
+      || interfaceId == type(IERC165).interfaceId;
+  }
 
-    /**
-     * @dev calculates the next token ID based on value of _currentTokenId
-     * @return uint256 for the next token ID
-     */
-    function _getNextTokenId() private view returns (uint256) {
-        return _currentTokenId + 1;
-    }
+  function name() external override view returns (string memory) {
+    return "A";
+  }
 
-    /**
-     * @dev increments the value of _currentTokenId
-     */
-    function _incrementTokenId() private {
-        _currentTokenId++;
-    }
+  /**
+   * @dev Returns the token collection symbol.
+   */
+  function symbol() external override view returns (string memory) {
+    return "A";
+  }
 
+  function balanceOf(address owner) external override view returns (uint256) {
+    return owner == nftOwner ? 1 : 0;
+  }
+
+  function ownerOf(uint256 tokenId) external override view returns (address) {
+    require(tokenId == 1, "inexistent token");
+    return nftOwner;
+  }
+
+  function safeTransferFrom(
+    address from,
+    address to,
+    uint256 tokenId,
+    bytes calldata data
+  ) external override {
+    revert();
+  }
+
+  function safeTransferFrom(
+    address from,
+    address to,
+    uint256 tokenId
+  ) external override {
+    revert();
+  }
+
+  function transferFrom(
+    address from,
+    address to,
+    uint256 tokenId
+  ) external override {
+    revert();
+  }
+
+  function approve(address to, uint256 tokenId) external override {
+    revert();
+  }
+
+  function setApprovalForAll(address operator, bool _approved) external override {
+    revert();
+  }
+
+  function getApproved(uint256 tokenId) external override view returns (address) {
+    return address(0);
+  }
+
+  function isApprovedForAll(address, address) external override view returns (bool) {
+    return false;
+  }
+
+  function sign() public {
+    require(signers.add(msg.sender));
+    emit Signed(msg.sender);
+  }
     /**
      * @dev return tokenURI, image SVG data in it.
      */
-
     function tokenURI(uint256 tokenId)
         public
         view
         override
         returns (string memory)
     {
-        string[17] memory parts;
-        parts[
-            0
-        ] = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 14px; }</style><rect width="100%" height="100%" fill="black" /><text x="10" y="20" class="base">';
-
-        /*
-        for (uint256 i = 0; i < _signers.length; i++) {
-            parts[i * 3 + 1] = '<text x="10" y="20" class="base">';
-            parts[i * 3 + 2] = Strings.toHexString(uint160(_signers[i]), 20);
-            parts[i * 3 + 3] = "</text></svg>";
-        }
-
-        string memory output = string(abi.encodePacked(parts[0]));
-
-        for (uint256 y = 1; y < parts.length - 1; y++) {
-            output = string(abi.encodePacked(output, parts[y]));
-        }
-        */
-
-        parts[1] = Strings.toString(tokenId);
-
-        parts[2] = "</text></svg>";
-
-        string memory output = string(
-            abi.encodePacked(parts[0], parts[1], parts[2])
-        );
-
-        string memory json = Base64.encode(
-            bytes(
-                string(
-                    abi.encodePacked(
-                        '{"name": "Greeting Card #',
-                        Strings.toString(tokenId),
-                        '", "description": "Greeting Card.", "image": "data:image/svg+xml;base64,',
-                        Base64.encode(bytes(output)),
-                        '"}'
-                    )
-                )
-            )
-        );
-        output = string(
-            abi.encodePacked("data:application/json;base64,", json)
-        );
-
-        return output;
+      require(tokenId == 1);
+      return GreetingLib.tokenURI(signers);
     }
 }
