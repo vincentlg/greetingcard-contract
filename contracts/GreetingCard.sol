@@ -10,6 +10,7 @@ contract GreetingCard is IERC721Metadata {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     address private nftOwner;
+    bool private done = false;
 
     EnumerableSet.AddressSet private signers;
 
@@ -106,14 +107,16 @@ contract GreetingCard is IERC721Metadata {
         return false;
     }
 
-    function sign() public payable {
+    receive() external payable {
+        require(!done);
         require(signers.add(msg.sender));
         emit Signed(msg.sender);
     }
 
-    function withdraw() public {
+    function withdraw() external {
         require(msg.sender == nftOwner);
         payable(nftOwner).transfer(address(this).balance);
+        done = true;
     }
 
     /**
